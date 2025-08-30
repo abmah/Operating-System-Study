@@ -4,6 +4,9 @@ computer hardware and acts as an intermediary between the programs and the hardw
 -Kernel is the core part of the operating 
 system that is always running that manages computer hardware and the computer can't run without it.
 
+
+()()Section Interrupts:
+
 -An interrupt is a mechanism that allows the 
 CPU to work in parallel with devices by sending 
 it a signal when something important happens. 
@@ -18,11 +21,64 @@ pause what it’s doing and handle something important right now.
 1. The **keyboard controller** detects the key press.
 2. The controller stores the value of the keystroke in its **buffer**.
 3. The controller sends an **interrupt signal** to the CPU.
-4. The CPU temporarily **pauses its current task** and calls the **interrupt handler**.
+4. The CPU temporarily **pauses its current task** saves state and calls the **interrupt handler**.
 5. The **interrupt handler** invokes the **keyboard driver**.
 6. The driver reads the keystroke from the controller's buffer.
 7. Finally, the driver sends the keystroke information to the **operating system** for use by programs.
 
+Interrupt Service Routine (ISR) = interrupt handler
 
+
+(Interrupt Vector Table)
+Interrupts need to be handled fast, because they happen very frequently.
+A naïve way would be to call a generic routine that looks at what caused the interrupt, then branches to the right handler.
+But that’s too slow.
+
+Instead, computers use an Interrupt Vector Table (IVT):
+It’s an array stored in low memory.
+Each entry is a pointer (address) to the correct ISR for a device.
+When an interrupt happens, the hardware gives a unique number (interrupt request number).
+That number is used as an index into the table → instantly finds the correct ISR.
+
+
+
+The CPU interrupt request line is a physical wire connected to the CPU.
+The CPU checks this wire after every instruction. If the line is high, it means there is an interrupt.
+The CPU reads the interrupt number from the device.
+It then looks up a special table called the interrupt vector.
+This table tells the CPU where the code is to handle this specific interrupt, called the interrupt handler.
+The interrupt handler saves the CPU’s current state so it can resume later.
+It determines what caused the interrupt and performs the required task.
+After finishing, the handler restores the CPU’s state.
+The CPU then returns to the original task it was executing before the interrupt.
+Once the handler is done, the device knows its request has been handled.
+
+
+what is the above system lacking? 
+-1. We need the ability to defer*(not allow) interrupt handling during critical processing.
+-2. We need an efficient way to dispatch to the proper interrupt handler for a device *since its a single line
+-3. We need multilevel interrupts, so that the operating system can distinguish between high- and low-priority
+interrupts and can respond with the appropriate degree of urgency
+
+
+thats why we use interrupt-controller hardware
+
+
+- Two Types of CPU Interrupt Lines
+-Nonmaskable Interrupt (NMI) Cannot be turned off. Reserved for critical events like unrecoverable memory errors.
+CPU must respond immediately.
+
+
+-Maskable Interrupt (IRQ) Can be temporarily disabled (masked) by the CPU.
+Useful when executing critical instructions that must not be interrupted.
+Used by most device controllers to request service.
+
+
+-We have a limitation with the interrupt vector table: there aren’t enough entries to
+provide a unique address for every possible device.
+The solution is interrupt chaining*important by using a linked list, where a single vector table entry can point to
+multiple interrupt handlers linked together.
+When an interrupt occurs, the CPU follows the chain, checking each handler in turn until
+it finds the one that can service the device.
 
 
