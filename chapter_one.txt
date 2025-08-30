@@ -1,0 +1,28 @@
+-An operating system is software that manages 
+computer hardware and acts as an intermediary between the programs and the hardware.
+
+-Kernel is the core part of the operating 
+system that is always running that manages computer hardware and the computer can't run without it.
+
+-An interrupt is a mechanism that allows the 
+CPU to work in parallel with devices by sending 
+it a signal when something important happens. 
+The CPU can then pause what it’s doing and handle the event.
+
+- An interrupt is a signal sent to the CPU that tells it to 
+pause what it’s doing and handle something important right now.
+
+
+-When someone presses the "A" key on the keyboard:
+
+1. The **keyboard controller** detects the key press.
+2. The controller stores the value of the keystroke in its **buffer**.
+3. The controller sends an **interrupt signal** to the CPU.
+4. The CPU temporarily **pauses its current task** and calls the **interrupt handler**.
+5. The **interrupt handler** invokes the **keyboard driver**.
+6. The driver reads the keystroke from the controller's buffer.
+7. Finally, the driver sends the keystroke information to the **operating system** for use by programs.
+
+
+
+
