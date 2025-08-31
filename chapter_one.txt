@@ -219,3 +219,31 @@ Caches in Multicore CPUs
 Level 1 (L1) cache: Each core has its own private cache (small but very fast).
 Level 2 (L2) cache: Shared by all cores on the chip (larger, slower than L1).
 Idea: Combines fast local storage and shared storage for efficiency.
+
+To the operating system, a multicore CPU with N cores looks like N separate CPUs.
+
+
+Problem with Many CPUs in a Traditional Multiprocessor
+Adding more CPUs increases computing power, but only up to a point.
+Problem: All CPUs share the system bus, so too many CPUs cause contention → performance can decrease instead of increase.
+
+NUMA (Non-Uniform Memory Access)
+Idea: Give each CPU (or group of CPUs) its own local memory accessed via a fast local bus.
+CPUs are connected via a shared system interconnect, so all memory is still addressable globally.
+
+Advantages:
+Fast local memory access → CPU can read/write its own memory quickly.
+No contention for local memory → better scalability with more CPUs.
+
+Drawbacks:
+Remote memory access is slower → e.g., CPU0 accessing CPU3’s memory takes longer than accessing its own.
+OS must carefully schedule tasks and manage memory to minimize this latency.
+
+
+Blade Servers
+Blade servers are systems where multiple processor boards (blades) share a single chassis.
+
+Each blade:
+Boots independently
+Runs its own operating system
+Some blades are multiprocessor themselves, so a blade server is like multiple independent multiprocessor systems in one chassis.
