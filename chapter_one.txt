@@ -82,3 +82,61 @@ When an interrupt occurs, the CPU follows the chain, checking each handler in tu
 it finds the one that can service the device.
 
 
+()()Storage Structure:
+
+the cpu can only load instructions from memory RAM *or DRAM
+all programs must be loaded into memeroy to run
+
+RAM is volitile cant store the bootstrap program*the program that starts the operating system so 
+computers use EEPROM electrically erasable programmable read-only memory 
+EEPROM is infrequently written to and is nonvolatile and slow.
+
+memory provides array of bytes each has its own address
+operations like load or store can be done
+
+Program counter is a register inside a cpu that stores 
+the memory address for next cpu instruction 
+neumann cycle is when cpu stores only one next instruction in the program counter
+
+
+The CPU loads instructions from memory, using the address stored in the program counter.
+
+Von Neumann Architecture:
+CPU, memory, and I/O share a single memory for instructions and data.
+CPU follows the fetch–decode–execute cycle:
+Fetch instruction from memory (using the Program Counter).
+Decode it.
+Fetch operands if needed.
+Execute.
+Store results back.
+Memory just sees addresses, not whether they hold instructions or data.
+
+
+nonvolatile memory (NVM) devices are secondary storage like hdd's or ssd's 
+
+
+()()I/O Structure:
+
+Interrupt-driven I/O
+Works fine for small data.
+Problem: For large data (like reading a big file), 
+CPU gets too many interrupts (one per byte), 
+which slows everything down.
+
+Direct Memory Access (DMA)
+Solution for bulk data transfer.
+Steps:
+CPU sets up buffers, pointers, and counters for the device.
+Device controller moves the entire block of data directly between memory and the device.
+CPU doesn’t touch each byte, so it’s free to do other tasks.
+Only one interrupt is sent when the block is done.
+
+
+
+Bus vs Switch architecture
+Bus architecture → all components share the same path (bus). Only one thing can communicate at a time.
+Switch architecture → multiple components can communicate at the same time, so DMA is even faster here.
+
+
+()()Single-Processor Systems:
+
