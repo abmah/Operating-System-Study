@@ -140,3 +140,82 @@ Switch architecture → multiple components can communicate at the same time, so
 
 ()()Single-Processor Systems:
 
+Single-Processor Systems
+Definition: A system with one general-purpose CPU, and that CPU has one processing core.
+Core: The part of the CPU that actually executes instructions and stores temporary data in registers.
+
+
+Special-Purpose Processors
+These are extra processors built for specific tasks. Examples:
+Disk controller CPU (handles disk read/write requests)
+Keyboard microprocessor (turns keystrokes into codes)
+Graphics controller microprocessor
+Characteristics:
+They have a limited instruction set (they can’t run general programs or user processes).
+Sometimes the OS communicates with them, sending tasks and monitoring status.
+Sometimes they are fully autonomous, doing their job without OS intervention.
+
+These special-purpose processors do not make a system multiprocessor because 
+the system still has only one general-purpose CPU core.
+
+
+Multiprocessor Systems
+
+Modern computers often have multiple processors (CPUs).
+Each processor may have one core (or multiple cores), and they share resources like:
+Bus (communication path)
+Sometimes memory, clock, or peripherals
+
+Why use multiple processors?
+Goal: Increase throughput → do more work in the same amount of time.
+With N processors, you might hope the system is N times faster.
+Reality: It’s less than N because:
+Overhead – extra work to coordinate tasks between processors.
+Resource contention – processors compete for shared memory, buses, or I/O devices.
+
+
+Clock:
+The clock is a timing signal that keeps all parts of the computer in sync.
+When multiple processors share a clock, they operate in lockstep timing, which simplifies coordination.
+
+Peripherals:
+Peripherals are external devices connected to the computer, like:
+Keyboard, mouse, printer, disk drives, network cards
+
+
+Symmetric Multiprocessing (SMP)
+
+Definition: A multiprocessor system where all CPUs are peers.
+Each CPU can run any task, including:
+Operating system functions
+User programs
+
+Key Features of SMP:
+Each CPU has its own registers and local cache
+Registers = tiny, super-fast storage inside CPU
+Local cache = fast memory near the CPU for frequently used data
+All CPUs share main memory
+Memory is accessible by all processors through the system bus
+
+
+Advantages:
+Multiple processes can run simultaneously
+Example: 2 CPUs → 2 processes run at the same time
+Overall performance is higher because tasks can be divided
+
+Challenges / Inefficiencies:
+One CPU may be idle while another is overloaded
+To avoid this, CPUs should share data structures and dynamically balance the workload
+Careful programming is needed to prevent conflicts when multiple CPUs access shared memory
+
+
+• CPU—The hardware that executes instructions.
+• Processor—A physical chip that contains one or more CPUs.
+• Core—The basic computation unit of the CPU.
+• Multicore— Including multiple computing cores on the same CPU.
+• Multiprocessor— Including multiple processors.
+
+Caches in Multicore CPUs
+Level 1 (L1) cache: Each core has its own private cache (small but very fast).
+Level 2 (L2) cache: Shared by all cores on the chip (larger, slower than L1).
+Idea: Combines fast local storage and shared storage for efficiency.
