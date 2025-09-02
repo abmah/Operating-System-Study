@@ -543,3 +543,166 @@ OS may help manage tertiary storage by:
   - Mounting/unmounting media
   - Allocating devices to processes
   - Migrating data from secondary to tertiary storage
+
+
+
+
+()()Cache Management:
+
+Cache Management
+----------------
+
+Caching Principle
+-----------------
+Cache is a faster, smaller storage that temporarily holds data from a slower storage system (like main memory or disk).
+When data is needed, the system checks the cache first.
+  - If it’s there → used directly
+  - If not → fetched from the source and stored in the cache for future use.
+
+Levels of Storage
+-----------------
+  - Registers – <1 KB, managed by compiler, fastest access.
+  - Cache – <16 MB, hardware-managed, holds instructions/data expected next.
+  - Main Memory – <64 GB, OS-managed, holds programs and data in use.
+  - Solid-State Disk (SSD) – <1 TB, OS-managed, slower but large storage.
+  - Magnetic Disk – <10 TB, OS-managed, used for permanent storage.
+Data can exist in multiple levels simultaneously (registers, cache, memory, disk).
+
+Cache Management
+----------------
+  - Software-controlled caches (like registers) use algorithms for replacement and allocation.
+  - Hardware caches (like CPU instruction/data caches) automatically move data without OS intervention.
+Goal: Select appropriate cache size and replacement policy to improve performance.
+
+Cache Coherency
+---------------
+In multitasking or multiprocessor environments, the same data may exist in multiple caches.
+Cache coherency ensures updates to a value (e.g., an integer in memory) are reflected across all caches.
+In distributed systems, copies of files on multiple machines must also stay consistent when updated.
+
+
+
+()()I/O System Management:
+------------------------------------------
+
+Purpose
+-------
+The OS hides hardware peculiarities from users and applications.
+Example: In UNIX, the I/O subsystem abstracts device details so other 
+parts of the OS and user programs don’t need to handle them directly.
+
+Components of the I/O Subsystem
+-------------------------------
+  - Memory-management component – includes buffering, caching, and spooling to improve efficiency.
+  - General device-driver interface – provides a standard way for the OS to communicate with devices.
+  - Device drivers – specialized software that knows the specific details of each hardware device.
+
+Operation
+---------
+I/O operations rely on interrupt handlers and device drivers to transfer data efficiently and signal completion.
+The OS manages device access, handles data transfer, and ensures smooth interaction between hardware and applications.
+
+
+
+
+()()Security and Protection:
+----------------------
+
+Protection
+----------
+Ensures that processes and users can access only authorized resources.
+
+Examples:
+  - Memory addressing hardware prevents a process from accessing another process’s memory space.
+  - Timer ensures a process cannot monopolize the CPU.
+  - Device-control registers are restricted to protect peripherals.
+
+Protection specifies controls and enforces them, improving system reliability and preventing misuse.
+
+Security
+--------
+Defends against external and internal attacks, including:
+  - Viruses and worms
+  - Denial-of-service attacks
+  - Identity theft
+  - Unauthorized use of system resources
+
+Security complements protection by ensuring that authentication and access 
+cannot be bypassed, even if resource protections exist.
+
+User and Group Identifiers
+--------------------------
+  - Every user has a unique user ID (UID or SID), associated with all their processes and threads.
+  - Users can belong to groups, each with a group identifier (GID), to manage collective access rights.
+Example: UNIX allows a file owner full access, a group of users read-only access.
+
+Privilege Escalation
+--------------------
+Sometimes a process needs temporary extra permissions.
+  - Effective UID (eUID): A process can run with the UID of the file owner instead of the current user.
+Example: UNIX setuid programs allow a process to temporarily escalate privileges, 
+then revert back after the operation or at termination.
+
+
+
+()()Virtualization:
+--------------
+
+Definition
+----------
+Virtualization abstracts a computer’s hardware (CPU, memory, disk, network) to create multiple virtual environments, 
+each behaving like a separate private computer.
+Each virtual environment can run its own operating system (e.g., Windows, Linux) and applications concurrently.
+
+Virtual Machines and Virtual Machine Manager (VMM)
+--------------------------------------------------
+  - A virtual machine (VM) is an isolated environment created by the OS or virtualization software.
+  - The VMM (or hypervisor) runs guest operating systems, manages their resource use, and protects each VM from the others.
+Example: VMware running on Windows hosts multiple Windows or Linux guest OSs.
+
+Virtualization vs. Emulation
+----------------------------
+  - Emulation simulates hardware in software, allowing software designed for one CPU architecture to run on a different CPU.
+    Example: Apple’s Rosetta translated IBM Power CPU instructions to Intel x86.
+    Emulation is slower because every instruction must be translated.
+  - Virtualization runs an OS natively on the same CPU architecture, avoiding translation overhead.
+
+Uses of Virtualization
+---------------------
+  - Concurrent OS execution – multiple OSs on one machine, originally on IBM mainframes.
+  - Software testing and development – run different OSs on a single server.
+  - Desktop exploration – run guest OSs for learning or accessing apps for different systems.
+  - Data centers – VMMs like VMware ESX or Citrix XenServer manage multiple virtual environments efficiently.
+
+
+
+
+Distributed Systems
+-------------------
+
+Definition
+----------
+A distributed system is a collection of physically separate, possibly heterogeneous(differnet in type)
+computers connected by a network, working together to provide shared resources to users.
+Shared resources improve computation speed, functionality, data availability, and reliability.
+
+Networking in Distributed Systems
+---------------------------------
+A network is a communication path between two or more systems.
+Distributed systems rely on networking, which varies in:
+  - Protocol: e.g., TCP/IP (common for the Internet), or proprietary protocols
+  - Distance: LAN (local), WAN (wide), MAN (city-wide), PAN (personal area)
+  - Transport media: copper wires, fiber optics, wireless (Bluetooth, Wi-Fi, cellular, infrared)
+
+Networks can be generalized by the OS (e.g., network files appear like local files) or 
+explicitly invoked by user programs (e.g., FTP, NFS).
+
+Network vs Distributed Operating Systems
+----------------------------------------
+Network Operating System (NOS):
+  - Each computer acts autonomously
+  - Provides file sharing and communication between computers
+
+Distributed Operating System (DOS):
+  - Computers cooperate closely
+  - Gives the illusion of a single unified system controlling all networked computers
