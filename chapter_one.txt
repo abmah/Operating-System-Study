@@ -239,7 +239,6 @@ Drawbacks:
 Remote memory access is slower → e.g., CPU0 accessing CPU3’s memory takes longer than accessing its own.
 OS must carefully schedule tasks and manage memory to minimize this latency.
 
-
 Blade Servers
 Blade servers are systems where multiple processor boards (blades) share a single chassis.
 
@@ -247,3 +246,300 @@ Each blade:
 Boots independently
 Runs its own operating system
 Some blades are multiprocessor themselves, so a blade server is like multiple independent multiprocessor systems in one chassis.
+
+
+
+()()Clustered Systems:
+A clustered system = group of independent computers (nodes) connected together,
+usually via a LAN (local area network) or faster links like InfiniBand.
+Each node is often a multicore system.
+They’re used for:
+
+High availability: Service keeps running even if one node fails (through redundancy).
+High performance computing: Running big problems in parallel across multiple nodes.
+
+
+Graceful degradation: Service continues but performance drops when some hardware fails.
+Fault tolerance: System keeps running even if one component fails completely.
+
+Asymmetric clustering:
+One node works. Another is “hot standby” (idle, only monitors). If main fails → standby takes over.
+
+
+Symmetric clustering:
+All nodes work and monitor each other. More efficient since all hardware is used.
+
+
+Parallelization: Splitting a program into parts that run on different nodes, then combining results.
+
+Parallel cluster: Multiple nodes share the same storage (requires special software to avoid conflicts).
+
+Storage-Area Network (SAN):
+A fast network that lets many systems connect to a shared pool of storage.
+If apps + data are stored on the SAN → any node can run them.
+If one node fails → another can instantly take over.
+
+
+
+()()Operating-System Operations:
+Bootstrap program (in firmware) runs first when the computer starts.
+Initializes hardware.
+Loads the OS kernel into memory.
+Kernel starts running and provides system services.
+System programs (daemons) start in the background.
+On Linux, systemd runs first, then launches other daemons.
+Once ready, the system waits for events (work to do).
+Events come as interrupts (from hardware) or traps/exceptions (from software).
+
+
+A system call is a software request for an OS service.
+
+
+()()Multiprogramming and Multitasking:
+
+Process
+-------
+A program in execution.
+When the OS runs a program, it becomes a process.
+
+Multiprogramming
+----------------
+Definition: The ability of an operating system to keep multiple processes in memory at the same time, switching the CPU among them.
+Goal: Increase CPU utilization (make sure the CPU is never idle if there is work to do).
+How it works:
+  - The OS loads several processes into memory.
+  - One process runs on the CPU.
+  - If it must wait (e.g., for I/O), the OS switches the CPU to another process.
+  - This cycle continues, so the CPU is always busy.
+
+Multitasking
+------------
+Definition: A logical extension of multiprogramming, where the CPU switches between processes so quickly that users 
+feel multiple programs are running at the same time.
+
+Goal: Provide fast response time to interactive users.
+Why needed:
+  - User input (keyboard, mouse, touch) is very slow compared to CPU speed.
+  - Instead of waiting, the CPU switches to another process, keeping the system responsive.
+
+CPU Scheduling
+--------------
+Definition: The method the OS uses to decide which process runs next when multiple are ready.
+Importance: Ensures fairness, efficiency, and good response times.
+
+Memory Management
+-----------------
+Definition: Managing how multiple processes share memory safely and efficiently.
+Challenge: Several processes must reside in memory simultaneously.
+Virtual Memory:
+  - Allows a process to run even if it is not completely in physical memory.
+  - Lets programs be larger than the actual RAM.
+  - Gives the illusion of a large, continuous memory space.
+
+
+
+File System
+-----------
+Definition: The part of the OS that organizes and manages files stored on secondary storage (e.g., hard disk, SSD).
+
+
+
+Process Synchronization and Communication
+-----------------------------------------
+Definition: Mechanisms to ensure processes can work together without conflicts.
+
+Deadlock
+--------
+Definition: A situation where processes are stuck waiting for each other, and none can continue.
+Example: Process A waits for Process B’s resource, while Process B waits for Process A’s resource.
+OS must prevent or resolve deadlocks 
+
+Protection
+----------
+Definition: Preventing processes from interfering with each other or with the OS itself.
+Example: One process cannot read another’s memory without permission.
+
+
+
+()()Dual-Mode and Multimode Operation:
+
+
+Dual-Mode Operation
+-------------------
+Purpose: Protects the operating system (OS) and user programs from interfering with each other.
+
+How: The CPU operates in two modes:
+  - User Mode – for running user applications; limited privileges.
+  - Kernel Mode (Supervisor/System Mode) – for running OS code; full privileges.
+
+Mode Bit: A hardware bit that indicates the current mode (0 = kernel, 1 = user).
+
+Example:
+  - When a program requests an OS service (via a system call), 
+    the CPU switches from user mode → kernel mode to safely execute privileged operations.
+
+Privileged Instructions
+-----------------------
+Certain instructions (like I/O control, timer management, or switching to kernel mode) can only be executed in kernel mode.
+Attempting them in user mode triggers a trap to the OS, preventing harm.
+
+Multimode / Multiple Rings
+--------------------------
+Modern CPUs may have more than two modes:
+  - Intel: 4 rings (Ring 0 = kernel, Ring 3 = user, rings 1–2 rarely used)
+  - ARMv8: 7 modes
+  - Some systems have a virtualization mode for virtual machine managers (VMMs) with privileges between kernel and user.
+
+Instruction Execution Lifecycle
+-------------------------------
+  - Control starts in kernel mode at boot.
+  - OS loads a user application → switches to user mode.
+  - When the application needs OS services → triggers a system call, trap, or interrupt → switches back to kernel mode.
+  - OS executes the requested service and returns control to the program in user mode.
+
+System Calls
+------------
+Definition: Mechanism for a user process to request OS services.
+
+Process:
+  - User program executes a system call (usually via a trap or syscall instruction).
+  - CPU switches to kernel mode.
+  - OS verifies parameters, executes the service, and returns control to the program.
+
+Error Handling / Protection
+---------------------------
+  - Hardware detects illegal operations (e.g., executing privileged instructions in user mode or accessing forbidden memory).
+  - Violations trigger a trap to the OS, which can:
+      - Terminate the program abnormally.
+      - Provide an error message.
+      - Optionally dump memory for debugging.
+
+
+Timer
+-------------------------
+Purpose: Ensures the OS keeps control of the CPU and prevents user programs from running forever.
+
+How it works:
+  - OS sets a timer to generate an interrupt after a fixed or variable period.
+  - Variable timers use a counter decremented by a clock; when it reaches 0 → interrupt occurs.
+
+Example:
+  - A 10-bit counter with 1 ms ticks allows interrupts from 1–1024 ms.
+
+Behavior:
+  - On interrupt, control returns to the OS; the OS can stop the program or give it more time.
+
+Privileged Instruction:
+  - Only the OS can set or modify the timer.
+
+()()Resource Management:
+
+
+Process Management 
+---------------------------------------
+
+Process
+-------
+A process is a program in execution, the basic unit of work in a system.
+Examples: A compiler running on a PC, a web browser displaying a page, or a social media app on a mobile device.
+
+Difference from a program:
+  - Program = passive entity (stored on disk).
+  - Process = active entity (executing on CPU).
+
+Resources Needed by a Process
+-----------------------------
+A process requires resources to execute:
+  - CPU time – to execute instructions
+  - Memory – for code, data, and stack
+  - Files – input/output or temporary storage
+  - I/O devices – e.g., screen, keyboard, network
+  - Processes may also receive initialization data (input).
+When a process finishes, the OS reclaims its resources for reuse.
+
+Single-threaded vs Multithreaded Processes
+------------------------------------------
+Single-threaded process:
+  - Has one program counter pointing to the next instruction.
+  - Executes instructions sequentially.
+  - Only one instruction executes at a time per process.
+
+Multithreaded process:
+  - Contains multiple program counters (threads), each executing independently.
+  - Allows concurrent execution within the same process.
+
+System Processes vs User Processes
+----------------------------------
+System processes: Execute operating system code.
+User processes: Execute user applications.
+Both types may execute concurrently on a single CPU (via time-sharing) or in parallel on multiple CPU cores.
+
+OS Responsibilities for Process Management
+------------------------------------------
+  - Creating and deleting processes (user and system).
+  - Scheduling processes and threads on CPU(s).
+  - Suspending and resuming processes.
+  - Providing process synchronization mechanisms.
+  - Providing process communication mechanisms.
+
+
+()()Memory Management:
+-------------------------------------------
+
+Main Memory
+-----------
+Main memory is a large array of bytes, each with a unique address.
+It is the CPU’s directly accessible storage, used for both instructions and data.
+Example: To process data from disk, the CPU must first load it into main memory.
+
+Memory and Program Execution
+----------------------------
+A program must be mapped to absolute addresses and loaded into memory before execution.
+While executing, the program accesses instructions and data from memory using these addresses.
+When the program finishes, its memory space is freed for other programs.
+
+Need for Memory Management
+--------------------------
+To improve CPU utilization and system responsiveness, multiple programs are often kept in memory simultaneously (multiprogramming).
+This creates a need for the OS to manage memory efficiently.
+
+OS Responsibilities in Memory Management
+----------------------------------------
+  - Tracking memory usage – which parts of memory are used and by which process.
+  - Allocating and deallocating memory – giving memory to processes when needed and reclaiming it when done.
+  - Deciding which data/processes to move – swapping processes or data into and out of memory to optimize performance.
+
+Techniques
+----------
+Many memory-management schemes exist, each requiring different hardware support.
+The choice of algorithm depends on the hardware design and system requirements.
+
+
+
+()()Mass-Storage Management:
+--------------------------------------------
+
+Secondary Storage
+-----------------
+Secondary storage (e.g., HDDs, SSDs/NVMs) backs up main memory and stores programs and data permanently.
+Programs like compilers, browsers, or games are stored here until loaded into main memory.
+The OS manages secondary storage efficiently because system performance depends on it.
+
+OS Responsibilities for Secondary Storage
+-----------------------------------------
+  - Mounting and unmounting – making storage devices accessible or removing them safely.
+  - Free-space management – tracking which storage areas are available.
+  - Storage allocation – assigning space to programs and files.
+  - Disk scheduling – deciding the order in which read/write requests are handled.
+  - Partitioning – dividing storage into logical sections.
+  - Protection – preventing unauthorized access or misuse of data.
+
+Tertiary Storage
+----------------
+Slower, cheaper storage with large capacity (e.g., magnetic tapes, CDs, DVDs, Blu-ray).
+Used for backups, archival, or rarely used data.
+
+OS may help manage tertiary storage by:
+  - Mounting/unmounting media
+  - Allocating devices to processes
+  - Migrating data from secondary to tertiary storage
