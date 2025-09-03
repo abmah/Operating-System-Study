@@ -706,3 +706,283 @@ Network Operating System (NOS):
 Distributed Operating System (DOS):
   - Computers cooperate closely
   - Gives the illusion of a single unified system controlling all networked computers
+
+
+()()Kernel Data Structures:
+---------------------
+
+The kernel relies on data structures to manage resources and system information efficiently. Key structures include lists, stacks, queues, trees, and hash maps.
+
+1. Lists
+---------
+A list is a collection of items accessed in sequence, unlike arrays where each element can be accessed directly.
+
+Types of linked lists:
+  - Singly linked list: each item points to the next.
+  - Doubly linked list: items point to both predecessor and successor.
+  - Circular linked list: the last item points back to the first.
+
+Use: Lists allow flexible insertion and deletion of items, though retrieving an item can take O(n) time.
+
+2. Stacks and Queues
+--------------------
+Stack: follows LIFO (Last In, First Out); items are added with push and removed with pop.
+  - Use in OS: function call management—parameters, local variables, and return addresses are pushed and popped.
+
+Queue: follows FIFO (First In, First Out); items leave in the order they arrive.
+  - Use in OS: job scheduling, e.g., print queues or tasks waiting for CPU execution.
+
+3. Trees
+--------
+A tree represents hierarchical relationships.
+
+  - Binary tree: each parent has at most two children (left ≤ right for a binary search tree).
+  - Balanced tree: ensures height ≤ lg n for n items, providing O(lg n) search performance.
+
+Use in OS: Linux uses red-black trees (balanced binary search trees) for CPU scheduling.
+
+4. Hash Functions and Hash Maps
+-------------------------------
+Hash function: converts input data to a numeric value used as an index in a table.
+  - Allows fast retrieval (≈ O(1)), unlike list search (O(n)).
+  - Collisions occur when two inputs produce the same hash; handled with linked lists at the same index.
+
+Hash map: maps key → value pairs using a hash function.
+Example: mapping a username to a password; the OS hashes the username to retrieve the password for authentication.
+
+Bitmaps
+-------
+
+A bitmap is a sequence of binary digits (0s and 1s) used to represent the status of multiple items efficiently.
+
+Example:
+  Bitmap: 001011101
+  - Each position corresponds to a resource:
+      0 → resource available
+      1 → resource unavailable
+  - Here, resources 2, 4, 5, 6, and 8 are unavailable; resources 0, 1, 3, and 7 are available.
+
+Advantages:
+  - Space-efficient: uses only one bit per resource, instead of larger data types like an 8-bit Boolean, saving memory.
+  - Commonly used for managing large numbers of resources.
+
+Use in OS:
+  - Disk drives often divide storage into disk blocks. A bitmap indicates which blocks are free or in use.
+
+
+
+
+()()Computing Environments:
+
+Traditional Computing
+---------------------
+
+As computing has matured, the lines separating many of the traditional computing environments have blurred. 
+Consider the “typical office environment.”
+
+Past Environment:
+  - PCs connected to a network.
+  - Servers providing file and print services.
+  - Remote access was awkward.
+  - Portability achieved via laptops.
+
+Modern Environment:
+  - Web technologies and higher WAN bandwidth stretch traditional boundaries.
+  - Companies establish portals for web access to internal servers.
+  - Network computers (thin clients) replace traditional workstations 
+    where security or easier maintenance is needed.
+  - Mobile computers synchronize with PCs for portable access to company information.
+  - Mobile devices connect to wireless and cellular networks to use company web portals and other web resources.
+
+Home Computing:
+  - Previously: single computer with slow modem connection to office or Internet.
+  - Today: fast, inexpensive network connections allow home PCs to serve web pages and run home 
+    networks with printers, client PCs, and servers.
+  - Firewalls protect networks from security breaches by limiting communications between devices.
+
+Historical Context:
+  - Mid-to-late 20th century: computing resources were scarce.
+  - Systems were either batch (processing jobs in bulk) or interactive (waiting for user input).
+  - Time-sharing systems allowed multiple users to share CPU resources using timers and scheduling algorithms.
+
+Modern Time-Sharing:
+  - Rare as traditional multi-user systems.
+  - Time-sharing techniques still used on desktops, laptops, servers, and mobile computers.
+  - User and system processes get slices of CPU time.
+  - Example: Windows on a PC can perform multiple tasks simultaneously.
+  - Web browsers may run multiple processes, one per active website, with time-sharing applied to each.
+
+
+Mobile Computing
+----------------
+
+Definition
+----------
+Mobile computing involves using handheld devices like smartphones and tablets, 
+which are portable and lightweight. Historically, these devices traded off screen size, 
+memory, and functionality for mobility and access to services like email and web browsing. 
+Today, modern mobile devices are powerful enough that their functionality often rivals 
+that of laptops or desktops.
+
+Applications and Features
+-------------------------
+Mobile devices are now used for:
+  - Web browsing
+  - Email
+  - Music and video
+  - E-books
+  - Photography
+  - High-definition video recording and editing
+
+Device-Specific Features:
+  - GPS chips for precise location tracking and navigation
+  - Accelerometers and gyroscopes for detecting orientation, tilting, shaking, and 
+    supporting interactive applications like games and augmented reality
+
+Connectivity
+------------
+Mobile devices rely on:
+  - Wireless networks (802.11 Wi-Fi)
+  - Cellular networks to access online services
+
+Limitations
+-----------
+Despite their power, mobile devices usually have:
+  - Less memory
+  - Slower processors
+  - Fewer cores than desktops or laptops
+Mainly due to power and size constraints.
+
+Dominant Mobile Operating Systems
+---------------------------------
+  - Apple iOS – used on iPhones and iPads
+  - Google Android – used on smartphones and tablets from many manufacturers
+
+
+
+Client–Server Computing
+-----------------------
+
+Definition
+----------
+Client–server computing is a network architecture where servers provide services or resources 
+in response to requests from clients. This setup is a type of specialized distributed system.
+
+Server Types
+------------
+  - Compute servers: Perform actions requested by clients, such as processing data or executing operations.
+      Example: A database server processes client queries and returns results.
+  - File servers: Manage files, allowing clients to create, read, update, or delete files.
+      Example: A web server delivers web pages or multimedia content like video to client browsers.
+
+Clients
+-------
+Clients can be desktops, laptops, smartphones, or other devices connected to the network.
+
+
+
+
+Peer-to-Peer (P2P) Computing
+----------------------------
+
+Definition
+----------
+In a peer-to-peer (P2P) system, there is no strict distinction between clients and servers. 
+Every node in the network can act as either a client or a server, depending on 
+whether it is requesting or providing a service. This contrasts with client–server systems, 
+where the server can become a performance bottleneck.
+
+Joining a P2P Network
+--------------------
+A node must first join the network before it can request or provide services.
+
+Service Discovery Methods
+-------------------------
+  - Centralized lookup: Each node registers its services with a central directory. 
+    Nodes requesting services consult this directory to locate the provider.
+  - Decentralized discovery: No central server exists. A node broadcasts a 
+    request to all other nodes, and the node(s) offering the service respond directly. 
+    A discovery protocol ensures that peers can find each other efficiently.
+
+Examples
+--------
+  - Napster: used a centralized index to find files, while actual file transfers 
+    occurred directly between peers.
+  - Gnutella: used a decentralized broadcast approach.
+  - Skype: uses a hybrid P2P model, with a central login server plus 
+    direct communication between peers for voice, video, and text messages.
+
+
+Cloud Computing
+---------------
+
+Definition
+----------
+Cloud computing delivers computing resources—such as storage, processing power, 
+and applications—as a service over a network. It is closely related to virtualization, 
+which provides the underlying abstraction of hardware.
+
+Types of Clouds
+---------------
+  - Public cloud: Available over the Internet to anyone who pays.
+  - Private cloud: Run internally by a company for its own use.
+  - Hybrid cloud: Combines both public and private cloud components.
+
+Service Models
+--------------
+  - Software as a Service (SaaS): Applications delivered over the Internet (e.g., word processors, spreadsheets).
+  - Platform as a Service (PaaS): Preconfigured software stacks available online (e.g., database servers).
+  - Infrastructure as a Service (IaaS): Servers, storage, and networking resources 
+    accessible online (e.g., for backups or virtual machines).
+
+Key Components
+--------------
+  - Virtual Machines (VMs): Run user processes.
+  - Virtual Machine Managers (VMMs): Manage VMs.
+  - Cloud Management Tools: Control cloud resources and provide user interfaces 
+    (e.g., VMware vCloud Director, Eucalyptus).
+  - Firewalls: Protect cloud services and user interfaces.
+
+
+
+Real-Time Embedded Systems
+--------------------------
+
+Embedded Systems
+----------------
+- The most common type of computer today, built into devices like:
+  • Car engines
+  • Washing machines
+  • Medical equipment
+  • Industrial robots
+- Unlike general-purpose computers, they:
+  • Perform specific, predefined tasks
+  • Often have limited hardware resources
+  • Usually have minimal or no user interface
+
+Types of Embedded Systems
+-------------------------
+1. General-purpose embedded computers  
+   - Run standard OS (e.g., Linux) with specialized applications.
+2. Special-purpose embedded OS devices  
+   - Designed to provide only the required functionality.
+3. ASIC-based systems  
+   - Hardware itself is built to handle the task without needing an OS.
+
+Connectivity
+------------
+- Many modern embedded systems connect to networks or the web.  
+- Examples: Smart homes where systems control heating, lights, alarms, 
+  and appliances (e.g., coffee makers, refrigerators).
+
+Real-Time Systems
+-----------------
+- Use Real-Time Operating Systems (RTOS) when strict timing requirements must be met.
+- Process inputs and produce outputs within a fixed deadline.
+- Common in:
+  • Medical imaging systems
+  • Industrial machines
+  • Automotive fuel injection
+  • Weapon systems
+- Missing deadlines can cause critical errors.  
+  Example: A robotic arm must stop **before** damaging a car, not after.
