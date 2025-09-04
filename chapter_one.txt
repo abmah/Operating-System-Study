@@ -986,3 +986,98 @@ Real-Time Systems
   • Weapon systems
 - Missing deadlines can cause critical errors.  
   Example: A robotic arm must stop **before** damaging a car, not after.
+
+
+
+()()Free and Open-Source Operating Systems
+--------------------------------------
+
+Closed-Source vs Open-Source
+----------------------------
+- Closed-source (proprietary): Source code is hidden, controlled by the company.
+- Open-source: Source code is available for use, study, and modification.
+- Free software (free/libre): Guarantees full freedoms → use, modify, redistribute.
+👉 All free software is open-source, but not all open-source is free.
+
+Examples
+--------
+- GNU/Linux → most famous open-source OS (many distributions).
+- Windows → closed-source, proprietary (owned by Microsoft).
+- macOS → hybrid (Darwin kernel open-source, many components closed).
+
+Why Source Code Matters
+-----------------------
+- Can be studied, modified, compiled, and run.
+- Reverse engineering binaries is hard and incomplete.
+- Useful for learning: students can experiment by modifying an OS.
+
+Advantages of Open Source
+-------------------------
+- Large community of contributors.
+- Often more secure: “many eyes” review the code.
+- Bugs fixed faster.
+- Encourages innovation and collaboration.
+
+Business Models
+---------------
+- Companies can profit from open source:
+  • Support contracts
+  • Services
+  • Hardware sales
+- Example: Red Hat earns revenue from support/services, not the software itself.
+
+
+
+
+
+
+GNU/Linux Timeline of Free and Open-Source Operating Systems
+-------------------------------------------------------------
+
+1950s–1970s: Early Software Sharing
+-----------------------------------
+- Software generally came with source code.
+- MIT hackers and “Homebrew” user groups freely exchanged programs.
+- Company-specific user groups, like DECUS, distributed source-code programs on tapes.
+- 1970: Digital’s OSs were distributed as source code with no copyright restrictions.
+
+1970s–1980s: Rise of Proprietary Software
+-----------------------------------------
+- Companies restricted software use to paying customers.
+- Binary-only distribution became standard, protecting intellectual property.
+- Hobbyist systems like CP/M were proprietary → shift toward closed-source software.
+
+1984: Birth of the Free Software Movement
+-----------------------------------------
+- Richard Stallman began the GNU Project to create a free UNIX-compatible OS.
+- “Free” = freedom to use, modify, and redistribute, not price.
+
+1985: GNU Manifesto and Free Software Foundation (FSF)
+------------------------------------------------------
+- Stallman published the GNU Manifesto advocating all software should be free.
+- FSF formed to promote and maintain free software development.
+- Introduced copyleft licensing via **GPL** to keep redistributed software free.
+
+1991: First Linux Kernel Release
+--------------------------------
+- Linus Torvalds (Finland) released the first Linux kernel using GNU tools.
+- Enabled worldwide collaboration via the Internet, with weekly updates.
+- Initially, Linux was not fully free; redistribution was noncommercial only.
+
+1992: Linux Under GPL
+---------------------
+- Torvalds re-released Linux under **GPL**, making it fully free and open-source.
+- Combined Linux kernel + GNU tools → **GNU/Linux OS**.
+
+1990s–2000s: Growth of GNU/Linux Distributions
+-----------------------------------------------
+- Rapid global development by thousands of contributors.
+- Major distributions: Red Hat, Debian, SUSE, Slackware, Ubuntu, Fedora.
+- Distributions vary in hardware support, applications, and target
+  use (e.g., Red Hat Enterprise Linux for commercial use).
+
+2000s–Present: Virtualization and Modern Use
+---------------------------------------------
+- GNU/Linux runs on Windows/macOS via VirtualBox, Qemu.
+- Used for desktops, servers, embedded systems, and software development.
+- Open-source communities maintain and enhance GNU/Linux → secure, flexible, widely adopted.
