@@ -1081,3 +1081,305 @@ GNU/Linux Timeline of Free and Open-Source Operating Systems
 - GNU/Linux runs on Windows/macOS via VirtualBox, Qemu.
 - Used for desktops, servers, embedded systems, and software development.
 - Open-source communities maintain and enhance GNU/Linux → secure, flexible, widely adopted.
+
+
+*this section not very important
+1978: Birth of BSD UNIX
+-----------------------
+- Started at UC Berkeley as a derivative of AT&T UNIX.
+- Development required an AT&T license, so it was not initially open source.
+
+1994: 4.4BSD-Lite Release
+-------------------------
+- First fully open-source BSD version, free of AT&T code.
+- Legal issues with AT&T had slowed progress until then.
+
+Modern BSD Variants
+-------------------
+- FreeBSD, NetBSD, OpenBSD, DragonflyBSD.
+- Source code under /usr/src/, with the kernel in /usr/src/sys.
+- Used Subversion (svn) for version control (Linux uses Git).
+- macOS kernel (Darwin) is based on BSD and partially open source (Apple releases "xnu" kernel).
+
+Solaris and OpenSolaris
+-----------------------
+- Developed by Sun Microsystems.
+- Originally BSD-based (SunOS), switched to System V UNIX in 1991.
+- OpenSolaris launched in 2005 (open source version).
+- After Oracle acquired Sun (2009), OpenSolaris stalled.
+- Community created Illumos → modern open-source continuation.
+
+Open-Source Systems as Learning Tools
+-------------------------------------
+- Open source makes it easier to:
+  * Study real OS internals (code is available, not just docs).
+  * Experiment: modify, test, and build your own OS distributions.
+  * Learn history: even old OSes (Multics, etc.) are open now.
+- Virtualization (VMware, VirtualBox) allows safe OS testing without extra hardware.
+- Open source fosters diversity and innovation → e.g., parts of OpenSolaris ported into BSD.
+- Main idea: open source lowered the barrier for anyone to move from student → OS developer.
+
+
+
+
+
+Operating System Overview
+-------------------------
+- Software that manages computer hardware and provides an environment for applications.
+
+Interrupts
+----------
+- Hardware devices interact with the OS via interrupts.
+- An interrupt signals the CPU that an event requires attention.
+- The interrupt handler manages this process.
+
+Main Memory
+-----------
+- Programs must be loaded into main memory for execution.
+- Main memory is volatile → contents lost when power is off.
+
+Nonvolatile Storage
+-------------------
+- Extension of main memory; holds large amounts of data permanently.
+- Most common device: hard disk (stores both programs and data).
+- Storage hierarchy: fast but expensive at the top, slower but cheaper as you move down.
+
+Multiprocessor & Multicore Systems
+----------------------------------
+- Modern systems use multiple CPUs, each with several cores.
+
+Multiprogramming & Multitasking
+-------------------------------
+- Multiprogramming: multiple jobs in memory → CPU always has work.
+- Multitasking: CPU rapidly switches between processes for fast user response.
+
+System Modes
+------------
+- User mode and kernel mode separate user programs from system operations.
+- Privileged instructions (kernel mode only): mode switching, I/O control, timer & interrupt management.
+
+Processes
+---------
+- Fundamental unit of work in an OS.
+- Process management includes:
+  * Creating and deleting processes.
+  * Communication and synchronization between processes.
+
+Memory Management
+-----------------
+- OS tracks memory usage and ownership.
+- Dynamically allocates and frees memory space.
+
+Storage Management
+------------------
+- Provides file systems for files and directories.
+- Manages space on mass-storage devices.
+
+Protection & Security
+---------------------
+- OS enforces access control for processes and users.
+- Protects resources and system stability.
+
+Virtualization
+--------------
+- Abstracts hardware into multiple execution environments.
+
+OS Data Structures
+------------------
+- Common structures: lists, stacks, queues, trees, maps.
+
+Computing Environments
+----------------------
+- Includes traditional, mobile, client–server, peer-to-peer, cloud, and real-time embedded systems.
+
+Open-Source Operating Systems
+-----------------------------
+- Available in source code form for free use, redistribution, and modification.
+- Examples: GNU/Linux, FreeBSD, Solaris.
+
+
+
+
+Operating System Overview
+-------------------------
+- An operating system is software that manages the computer hardware, as
+  well as providing an environment for application programs to run.
+
+Interrupts
+----------
+- Interrupts are a key way in which hardware interacts with the operating
+  system. A hardware device triggers an interrupt by sending a signal to the
+  CPU to alert the CPU that some event requires attention. The interrupt is
+  managed by the interrupt handler.
+
+Main Memory
+-----------
+- For a computer to do its job of executing programs, the programs must be
+  in main memory, which is the only large storage area that the processor
+  can access directly.
+- The main memory is usually a volatile storage device that loses its contents
+  when power is turned off or lost.
+
+Nonvolatile Storage
+-------------------
+- Nonvolatile storage is an extension of main memory and is capable of
+  holding large quantities of data permanently.
+- The most common nonvolatile storage device is a hard disk, which can
+  provide storage of both programs and data.
+- The wide variety of storage systems in a computer system can be organized
+  in a hierarchy according to speed and cost. The higher levels are expensive,
+  but they are fast. As we move down the hierarchy, the cost per bit generally
+  decreases, whereas the access time generally increases.
+
+Multiprocessor Systems
+----------------------
+- Modern computer architectures are multiprocessor systems in which each
+  CPU contains several computing cores.
+
+Multiprogramming and Multitasking
+---------------------------------
+- To best utilize the CPU, modern operating systems employ multiprogramming,
+  which allows several jobs to be in memory at the same time, thus
+  ensuring that the CPU always has a job to execute.
+- Multitasking is an extension of multiprogramming wherein CPU scheduling
+  algorithms rapidly switch between processes, providing users with a
+  fast response time.
+
+System Modes
+------------
+- To prevent user programs from interfering with the proper operation of
+  the system, the system hardware has two modes: user mode and kernel
+  mode.
+- Various instructions are privileged and can be executed only in kernel
+  mode. Examples include the instruction to switch to kernel mode, I/O
+  control, timer management, and interrupt management.
+
+Processes
+---------
+- A process is the fundamental unit of work in an operating system. Process
+  management includes creating and deleting processes and providing
+  mechanisms for processes to communicate and synchronize with each
+  other.
+
+Memory Management
+-----------------
+- An operating system manages memory by keeping track of what parts of
+  memory are being used and by whom. It is also responsible for dynamically
+  allocating and freeing memory space.
+
+Storage Management
+------------------
+- Storage space is managed by the operating system; this includes providing
+  file systems for representing files and directories and managing space on
+  mass-storage devices.
+
+Protection and Security
+-----------------------
+- Operating systems provide mechanisms for protecting and securing the
+  operating system and users. Protection measures control the access of
+  processes or users to the resources made available by the computer system.
+
+Virtualization
+--------------
+- Virtualization involves abstracting a computer’s hardware into several
+  different execution environments.
+
+Data Structures
+---------------
+- Data structures that are used in an operating system include lists, stacks,
+  queues, trees, and maps.
+
+Computing Environments
+----------------------
+- Computing takes place in a variety of environments, including traditional
+  computing, mobile computing, client–server systems, peer-to-peer systems,
+  cloud computing, and real-time embedded systems.
+
+Open-Source Operating Systems
+-----------------------------
+- Free and open-source operating systems are available in source-code format.
+  Free software is licensed to allow no-cost use, redistribution, and
+  modification. GNU/Linux, FreeBSD, and Solaris are examples of popular
+  open-source systems.
+
+
+
+Practice Exercises
+------------------
+
+1.1 
+- What are the three main purposes of an operating system?
+Resource management
+User interface / program execution environment
+Control and security
+
+
+
+
+1.2 
+- We have stressed the need for an operating system to make efficient use
+  of the computing hardware. When is it appropriate for the operating
+  system to forsake this principle and to “waste” resources? 
+- Why is such a system not really wasteful?
+
+when doing so improves user convenience, responsiveness, or system reliability.
+
+1.3 
+- What is the main difficulty that a programmer must overcome in writing
+  an operating system for a real-time environment?
+all tasks meet their timing constraints
+
+
+1.4 
+- Keeping in mind the various definitions of operating system, consider
+  whether the operating system should include applications such as web
+  browsers and mail programs. 
+- Argue both that it should and that it should not, and support your answers.
+
+im not going to
+
+1.5 
+- How does the distinction between kernel mode and user mode function
+  as a rudimentary form of protection (security)?
+kernal has access to everything user has not
+
+
+1.6 
+- Which of the following instructions should be privileged?
+  a. Set value of timer.  yes
+  b. Read the clock.  no
+  c. Clear memory.  yes
+  d. Issue a trap instruction.  no
+  e. Turn off interrupts.  yes
+  f. Modify entries in device-status table.  yes
+  g. Switch from user to kernel mode.  yes
+  h. Access I/O device.  yes
+
+1.7 
+- Some early computers protected the operating system by placing it in
+  a memory partition that could not be modified by either the user job or
+  the operating system itself. 
+- Describe two difficulties that you think could arise with such a scheme.
+maybe some process have to modify something in the os or something
+probably really slow 
+
+
+
+1.8 
+- Some CPUs provide for more than two modes of operation. 
+- What are two possible uses of these multiple modes?
+
+1.9 
+- Timers could be used to compute the current time. 
+- Provide a short description of how this could be accomplished.
+
+1.10 
+- Give two reasons why caches are useful. 
+- What problems do they solve? 
+- What problems do they cause? 
+- If a cache can be made as large as the device for which it is caching
+  (for instance, a cache as large as a disk), why not make it that large 
+  and eliminate the device?
+
+1.11 
+- Distinguish between the client–server and peer-to-peer models of distributed systems.
