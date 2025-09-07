@@ -1,0 +1,185 @@
+Operating-System Services
+-------------------------
+- OS provides an environment for executing programs and offers useful services
+  for users and efficient system management.
+
+User-Focused Services
+---------------------
+- User Interface (UI):
+  * GUI → windows, mouse, keyboard
+  * Touchscreen → mobile devices
+  * CLI → text commands
+- Program Execution:
+  * Load, run, and terminate programs (normal or error).
+- I/O Operations:
+  * OS provides safe, efficient access to files and devices.
+- File-System Manipulation:
+  * Read/write, create/delete, search files/directories.
+  * Manage permissions and access control.
+- Communications:
+  * Exchange info between processes (same system or over network).
+  * Methods → Shared Memory or Message Passing.
+- Error Detection:
+  * Detect/correct errors in hardware, I/O, or user programs.
+  * Take action: halt system, terminate process, or return error codes.
+
+System-Focused Services
+-----------------------
+- Resource Allocation:
+  * Manage CPU, memory, storage, I/O devices among processes.
+  * Use scheduling and allocation routines for efficiency.
+- Logging / Accounting:
+  * Track usage of programs and resources.
+  * Used for billing or performance statistics.
+- Protection and Security:
+  * Prevent unauthorized access to processes and resources.
+  * Authentication (passwords, etc.).
+  * Defend system from internal and external threats.
+
+
+
+User and Operating-System Interface
+-----------------------------------
+- Users interact with the OS via:
+  * Command-Line Interface (CLI)
+  * Graphical User Interface (GUI)
+
+Command Interpreters (Shells)
+-----------------------------
+- Special program that runs when user logs in or starts a process.
+- Examples (UNIX/Linux): Bourne-Again shell (bash), C shell, Korn shell.
+- Choice of shell = user preference.
+
+Main Function
+-------------
+- Read and execute user commands.
+- Common tasks: create, delete, copy, list, execute files.
+
+Implementation Approaches
+-------------------------
+1. Built-in Commands:
+   * Interpreter contains code to directly execute commands.
+   * Interpreter size grows with number of commands.
+
+2. System Programs (UNIX style):
+   * Interpreter invokes external program files (e.g., `rm file.txt` → runs program `rm`).
+   * Easy to add new commands by creating new programs.
+   * Interpreter remains small and flexible.
+
+
+Graphical User Interface (GUI)
+------------------------------
+- User interacts with OS via windows, menus, icons (desktop metaphor).
+- Mouse used to point, click, select, or open programs/files/folders.
+- Origin:
+  * First GUI → Xerox Alto (1973, Xerox PARC).
+  * Popularized by Apple Macintosh (1980s).
+  * Microsoft Windows (since 1.0) built on GUI over MS-DOS.
+- Evolution:
+  * macOS → Aqua interface.
+  * Windows → enhanced appearance and functionality over versions.
+- UNIX/Linux:
+  * Traditionally CLI-based.
+  * GUIs available → KDE, GNOME (open-source desktops).
+
+Touch-Screen Interface
+----------------------
+- Common in mobile devices (smartphones, tablets).
+- User interacts with gestures: tap, press, swipe.
+- Replaces physical keyboards with on-screen keyboards.
+- Examples:
+  * iPhone & iPad → Springboard interface.
+  * Earlier smartphones used physical keyboards (now mostly obsolete).
+
+
+Choice of Interface
+-------------------
+- CLI vs GUI → mostly personal preference.
+- Command-Line Interface (CLI):
+  * Preferred by system administrators & power users.
+  * More efficient for complex or repetitive tasks.
+  * Supports scripting (shell scripts) for automation.
+  * Common in UNIX/Linux systems.
+- Graphical User Interface (GUI):
+  * Preferred by most Windows and macOS users.
+  * Easier for everyday tasks, visually intuitive.
+  * Some functions may only exist in CLI, not GUI.
+- Hybrid Examples:
+  * Windows → GUI + optional touch screen.
+  * macOS → Aqua GUI + CLI (UNIX-based).
+- Mobile Systems:
+  * Almost entirely touch-based (iOS, Android).
+  * CLIs exist but rarely used.
+- Key Note:
+  * UI design is separate from OS internals.
+  * OS focuses on providing services; UI is just one layer above.
+
+
+System Calls
+------------
+- Interface between user programs and OS services.
+- Usually provided as functions in C/C++; low-level tasks may use assembly.
+
+Example: Copying One File to Another
+------------------------------------
+1. Acquire file names:
+   * CLI: `cp in.txt out.txt`
+   * Interactive: prompts + keyboard input
+   * GUI: menus, icons, file selection
+   → Requires I/O system calls
+
+2. Open files:
+   * Open input file → handle errors (file not found, access denied)
+   * Create/open output file → handle conflicts (file exists, overwrite, abort, or ask user)
+
+3. Copy loop:
+   * Read from input file (system call)
+   * Write to output file (system call)
+   * Handle errors (EOF, disk errors, no space, device issues)
+
+4. Finish:
+   * Close files (system calls)
+   * Display completion message (system call)
+   * Terminate program normally (system call)
+
+Key Idea
+--------
+- Even simple tasks (like copying a file) involve **many system calls**:
+  * File operations, I/O, error handling, process termination.
+- System calls provide controlled, safe access to OS resources.
+
+
+
+Application Programming Interface (API)
+---------------------------------------
+- Provides a set of functions for application programmers to access OS services.
+- Hides low-level system-call details from programmers.
+- Common APIs:
+  * Windows API → Windows systems
+  * POSIX API → UNIX, Linux, macOS
+  * Java API → Java Virtual Machine
+
+How API Works
+-------------
+- Programmer calls API function (e.g., read(), CreateProcess()).
+- API function invokes the appropriate system call internally.
+- OS executes the system call in kernel mode, returns result to program.
+- Programmer only needs to follow API; OS implementation details are hidden.
+- Run-Time Environment (RTE) manages API, libraries, loaders, and compilers.
+
+Example: read() in UNIX/Linux
+------------------------------
+#include <unistd.h>
+ssize_t read(int fd, void *buf, size_t count)
+- Parameters:
+  * fd → file descriptor
+  * buf → memory buffer
+  * count → max bytes to read
+- Returns number of bytes read, 0 = EOF, -1 = error.
+
+Parameter Passing Methods
+-------------------------
+1. Registers → simplest, fast.
+2. Memory block/table → used when too many parameters.
+3. Stack → push parameters, OS pops them.
+- Linux: ≤5 parameters → registers, >5 → block in memory.
