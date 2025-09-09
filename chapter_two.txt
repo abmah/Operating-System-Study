@@ -183,3 +183,228 @@ Parameter Passing Methods
 2. Memory block/table → used when too many parameters.
 3. Stack → push parameters, OS pops them.
 - Linux: ≤5 parameters → registers, >5 → block in memory.
+
+
+
+
+Process Control System Calls
+----------------------------
+- Terminate program:
+  * end() → normal termination
+  * abort() → abnormal termination (may produce memory dump, error message, log file)
+- Error levels indicate severity:
+  * 0 → normal termination
+  * Higher values → more severe errors
+  * Used by command interpreter/programs to decide next actions
+- Load and execute other programs:
+  * load(), execute() → run another program
+  * Control after execution:
+    - Return to original program (requires saving memory image)
+    - Run concurrently (multiprogramming)
+  * create process() → system call to create new process
+
+Process Attributes & Management
+-------------------------------
+- get process attributes() / set process attributes() → check/set priority, max execution time, etc.
+- terminate process() → stop a created process if unnecessary or incorrect
+
+Waiting & Synchronization
+------------------------
+- wait time() → wait for a specified time
+- wait event() → wait for a specific event
+- signal event() → signal that an event occurred
+- acquire lock(), release lock() → lock shared data to ensure integrity when accessed by multiple processes
+
+Examples
+--------
+1. Arduino (Single-tasking system):
+   - Program ("sketch") uploaded via PC to flash memory
+   - Bootloader loads sketch
+   - Only one sketch runs at a time; new sketch replaces old
+   - Input via hardware sensors, no UI
+
+2. FreeBSD (Multitasking system):
+   - Shell waits for user commands
+   - fork() → create new process
+   - exec() → load and execute program
+   - Background execution:
+     - Shell continues while program runs
+     - Input via files or GUI
+   - exit() → terminate process, return status code (0 = success, non-zero = error)
+
+
+File Management System Calls
+----------------------------
+- Create and delete files:
+  * create() → create new file with name and attributes
+  * delete() → remove file
+- Open and use files:
+  * open() → open a file for access
+  * read() / write() → read from or write to a file
+  * reposition() → move file pointer (rewind, skip to end, etc.)
+  * close() → close file when done
+- Directory operations:
+  * Same operations can apply to directories in a hierarchical file system
+- File attributes:
+  * get file attributes() → read attributes (name, type, protection, accounting info)
+  * set file attributes() → modify attributes
+  * Some systems provide move() and copy() or APIs to perform these operations
+  * System programs callable by other programs may act as APIs
+
+Device Management System Calls
+------------------------------
+- Resources (memory, disk drives, files, etc.) may be requested and released
+  * request() → request exclusive access to a device
+  * release() → release the device after use
+- I/O operations:
+  * read() / write() / reposition() → similar to file operations
+- Some OS merge files and devices into a single file-device structure
+  * I/O devices may be identified by special file names, directory placement, or attributes
+- Design decisions can make files and devices appear similar to the user, even if system calls differ
+
+Information Maintenance System Calls
+------------------------------------
+- Transfer info between user program and OS:
+  * time() → return current time
+  * date() → return current date
+  * Other calls → return system info (OS version, free memory/disk space)
+- Debugging support:
+  * dump() → memory dump for debugging
+  * strace (Linux) → list system calls executed
+  * Single-step CPU mode → trap after each instruction for debugging
+- Time profiling:
+  * Records program counter at timer interrupts
+  * Generates statistical picture of time spent in program sections
+- Process information:
+  * get process attributes() / set process attributes() → access or modify process details
+
+
+
+Communication System Calls
+--------------------------
+- Two models of interprocess communication (IPC):
+  1. Message-passing model
+  2. Shared-memory model
+
+Message-Passing Model:
+- Processes exchange messages directly or via a common mailbox
+- Connection setup required:
+  * get hostid() → translate host name to identifier
+  * get processid() → translate process name to identifier
+  * open connection() / close connection() → start and end communication
+  * accept connection() → recipient permits communication
+- Client-server model:
+  * Client → source of communication
+  * Server → receiving daemon, executes wait for connection()
+  * read message() / write message() → exchange data
+
+Shared-Memory Model:
+- Processes create and attach to shared memory:
+  * shared memory create() → create shared memory region
+  * shared memory attach() → access memory region of another process
+- Shared memory allows direct reading/writing between processes
+- Processes responsible for avoiding conflicts
+- Threads (Chapter 4) share memory by default
+
+Comparison:
+- Message passing → easier for intercomputer communication, handles small data
+- Shared memory → fastest for same-computer communication, requires synchronization and protection
+
+Protection System Calls
+-----------------------
+- Control access to resources (files, disks, etc.)
+- set permission() / get permission() → set or query resource permissions
+- allow user() / deny user() → grant or revoke user access
+- Protection ensures safe resource access in multiprogramming and networked environments
+- Security (external threats) discussed in Chapter 16
+
+
+
+System Services
+---------------
+
+- Definition:
+  * Also called system utilities
+  * Provide environment for program development and execution
+  * Some are simple interfaces to system calls; others are complex
+
+- Categories of System Services:
+
+1. File Management:
+   - Create, delete, copy, rename, print, list files and directories
+   - Access and manipulate file content and structure
+
+2. Status Information:
+   - Query system for date, time, memory, disk space, number of users
+   - Provide performance, logging, debugging info
+   - Output may be printed, displayed in GUI, or stored in registry
+
+3. File Modification:
+   - Text editors to create/modify file content
+   - Commands to search, transform text
+
+4. Programming-Language Support:
+   - Compilers, assemblers, debuggers, interpreters (C, C++, Java, Python)
+   - Provided with OS or as separate downloads
+
+5. Program Loading and Execution:
+   - Loaders: absolute, relocatable, linkage, overlay loaders
+   - Debugging systems for high-level or machine language
+
+6. Communications:
+   - Enable virtual connections between processes, users, and systems
+   - Functions: messaging, web browsing, email, remote login, file transfer
+
+7. Background Services:
+   - System programs launched at boot time
+   - Some terminate after task; others run continuously (services, subsystems, daemons)
+   - Examples: network daemon, process schedulers, error monitoring, print servers
+   - OS may run activities in user context via daemons
+
+- Applications:
+  * Supplied OS programs for common tasks: web browsers, word processors, spreadsheets, databases, compilers, plotting/statistics, games
+
+- User View:
+  * User interacts with system via application and system programs, not direct system calls
+  * Same hardware can present multiple interfaces (GUI, shell, dual-boot OS)
+  * System calls remain consistent, interfaces differ
+
+
+Linkers and Loaders
+-------------------
+
+- Purpose:
+  * Bring program from disk into memory
+  * Place program in context of a process to run on CPU
+
+- Steps to Run a Program:
+  1. Compilation:
+     - Source files (.c, .cpp, etc.) → object files (.o)
+     - Relocatable object file → can be loaded at any memory address
+  2. Linking:
+     - Combines object files into single executable
+     - Can include libraries (e.g., standard C/math library using -lm)
+     - Relocation performed → final addresses assigned, code/data adjusted
+  3. Loading:
+     - Loader places executable into memory
+     - Program becomes eligible to run on CPU
+     - On UNIX: shell uses fork() → creates process, exec() → invokes loader
+     - On GUI: double-click icon triggers loader similarly
+
+- Dynamic Linking:
+  * Libraries may be dynamically linked during program load
+  * Example: DLLs in Windows, conditional loading of math library
+  * Benefits: avoids loading unused libraries, multiple processes can share libraries → memory savings
+
+- File Formats:
+  * Contain compiled code + symbol table (metadata for functions/variables)
+  * UNIX/Linux → ELF (Executable and Linkable Format)
+    - Separate formats for relocatable (.o) and executable files
+    - Executable files contain entry point → address of first instruction
+  * Windows → PE (Portable Executable)
+  * macOS → Mach-O
+
+- ELF Utilities:
+  * file main.o → reports relocatable ELF object
+  * file main → reports ELF executable
+  * readelf → examine sections and details of ELF files
