@@ -185,7 +185,7 @@ Parameter Passing Methods
 - Linux: ≤5 parameters → registers, >5 → block in memory.
 
 
-
+Types of System Calls:
 
 Process Control System Calls
 ----------------------------
@@ -203,12 +203,12 @@ Process Control System Calls
     - Run concurrently (multiprogramming)
   * create process() → system call to create new process
 
-Process Attributes & Management
+Process Attributes & Management System Calls
 -------------------------------
 - get process attributes() / set process attributes() → check/set priority, max execution time, etc.
 - terminate process() → stop a created process if unnecessary or incorrect
 
-Waiting & Synchronization
+Waiting & Synchronization System Calls
 ------------------------
 - wait time() → wait for a specified time
 - wait event() → wait for a specific event
@@ -408,3 +408,171 @@ Linkers and Loaders
   * file main.o → reports relocatable ELF object
   * file main → reports ELF executable
   * readelf → examine sections and details of ELF files
+
+
+
+
+Why Applications Are OS Specific
+--------------------------------
+- User View:
+  * Applications compiled on one OS usually cannot run on another OS
+  * Running same application on multiple OSs requires:
+    1. Interpreted languages (Python, Ruby) – interpreter executes source line by 
+    line on native CPU, calls native system calls, limited performance and OS features
+    2. Virtual Machine languages (Java) – RTE includes loader, bytecode verifier, VM; 
+    allows app to run across OSs with RTE, similar performance limits as interpreters
+    3. Standard language/APIs – compiler generates OS- and machine-specific binaries; 
+    requires porting and testing for each OS (e.g., POSIX API for UNIX variants)
+
+- System-Level Reasons:
+  * Each OS has unique system calls differing in:
+    - Numbering, operands, invocation method, behavior, and return values
+  * OS provides libraries with APIs (e.g., GUI functions) – apps calling one OS's APIs may fail on another
+  * Different binary formats for executables dictate layout of headers, instructions, and variables
+  * CPUs have varying instruction sets; binaries must match CPU architecture
+  * Application Binary Interface (ABI) specifies low-level binary compatibility per OS and CPU:
+    - Address width, parameter passing, stack organization, system library format, data type sizes
+  * ELF format in UNIX/Linux standardizes binary layout across UNIX systems but not across CPU architectures
+  * Without interpreter, RTE, or OS-specific binary, applications fail on other OSs
+  * Cross-platform apps (like Firefox) require separate builds and testing for each OS and CPU
+
+
+
+
+Operating-System Design and Implementation
+-------------------------------------------
+- User View:
+  * OS design depends on hardware type and system type: desktop/laptop, mobile, distributed, real-time
+  * Users want convenience, ease of learning, reliability, safety, and speed
+  * Developers want system to be easy to design, implement, maintain; also flexible, reliable, error-free, and efficient
+  * No unique solution; different requirements yield different OS designs (e.g., VxWorks vs Windows Server)
+
+- Mechanisms and Policies:
+  * Mechanism = how something is done; Policy = what is done
+  * Separation allows flexibility; policies can change without altering mechanisms
+  * Example: Timer mechanism ensures CPU protection; setting timer length is policy
+  * Priority mechanism can support multiple policies (I/O vs CPU intensive programs)
+  * Microkernel OS: minimal mechanisms, policy implemented via modules or user programs
+  * Windows/macOS: mechanism and policy tightly integrated for consistent interface
+  * Open-source OS (Linux): mechanism defined, policy can be changed by modifying components (e.g., CPU scheduler)
+  * Resource allocation decisions: 'what' → policy; 'how' → mechanism
+
+
+
+
+
+
+Implementation of Operating Systems
+-----------------------------------
+- User View:
+  * Once designed, an OS must be implemented as a collection of programs
+  * Early OSs: written entirely in assembly language
+  * Modern OSs: mostly written in higher-level languages (C, C++, Java), with small assembly portions
+  * Example: Android
+    - Kernel: mostly C + some assembly
+    - System libraries: C or C++
+    - Application frameworks: mostly Java
+
+- Advantages of higher-level languages:
+  * Faster development, more compact code, easier to understand and debug
+  * Compiler improvements benefit entire OS
+  * Easier to port to different hardware (embedded devices, x86, ARM)
+  * Modern compilers produce optimized code, sometimes better than hand-written assembly for large programs
+
+- Disadvantages:
+  * Slightly reduced speed and increased storage needs (minor on modern systems)
+
+- Performance considerations:
+  * Major improvements come from better algorithms and data structures, not assembly coding
+  * Only a small part of OS is performance-critical: interrupt handlers, I/O manager, memory manager, CPU scheduler
+  * Critical routines can be optimized after system works correctly
+
+
+
+Monolithic Structure
+-------------------
+- User View:
+  * OS functionality combined into a single, static binary running in one address space
+  * Simplest OS organization, minimal internal structure
+  * Example: Original UNIX
+    - Two main parts: kernel and system programs
+    - Kernel provides file system, CPU scheduling, memory management, device drivers
+    - Layered approach: everything below system-call interface and above hardware is kernel
+
+- Linux Example:
+  * Based on UNIX; monolithic kernel running entirely in kernel mode
+  * Applications communicate with kernel via glibc C library and system-call interface
+  * Kernel has modular features allowing runtime modification (dynamic modules)
+
+- Advantages:
+  * High performance: minimal system-call overhead
+  * Fast internal kernel communication
+
+- Disadvantages:
+  * Difficult to implement, maintain, and extend
+  * All functionality in a single address space increases complexity
+
+- Usage:
+  * Still common in UNIX, Linux, and Windows due to efficiency and speed
+
+
+
+
+Layered Approach
+----------------
+- User View:
+  * OS divided into separate layers, each with specific functionality
+  * Bottom layer (layer 0) = hardware; top layer (layer N) = user interface
+  * Each layer uses only the operations of lower-level layers, hiding internal implementation from higher layers
+
+- Advantages:
+  * Simplicity in construction, debugging, and verification
+    - Debug one layer at a time; errors must be in the current layer
+  * Encapsulation: higher layers don’t need to know details of lower layers
+  * Supports modularity and easier system modification
+
+- Implementation Notes:
+  * Each layer = data structures + functions invoked by higher layers
+  * Each layer invokes operations on lower layers only
+
+- Disadvantages:
+  * Difficult to define precise functionality for each layer
+  * Performance overhead: user program may traverse multiple layers for services
+  * Few OSs use pure layered approach; contemporary systems often have fewer layers with more functionality
+
+
+
+
+Microkernels and Modules
+------------------------
+- Microkernels:
+  * OS structure where only essential services remain in kernel; other services run in user space
+  * Typical microkernel services: minimal process management, memory management, communication
+  * Client programs and services communicate via message passing through the microkernel
+  * Advantages:
+    - Easier to extend OS: add new services in user space without changing kernel
+    - Smaller kernel → easier to port to different hardware
+    - Increased security and reliability: service failure doesn’t crash OS
+  * Examples:
+    - Darwin (macOS/iOS): uses Mach microkernel
+    - QNX Neutrino: real-time OS with microkernel for message passing, process scheduling
+  * Disadvantages:
+    - Performance overhead from message passing and process switching
+    - Example: early Windows NT microkernel slower than Windows 95; later versions moved closer 
+      to monolithic for performance
+
+Modules
+------------------------
+
+
+- Modules (Loadable Kernel Modules - LKMs):
+  * Kernel has core components; additional services linked via modules at boot or runtime
+  * Core services (e.g., CPU scheduling, memory management) in kernel; 
+  other services (e.g., file systems, device drivers) loaded dynamically
+  * Advantages:
+    - Flexible and modular while maintaining performance
+    - Modules can communicate without message passing
+    - Dynamic loading allows runtime addition/removal (e.g., USB drivers)
+  * Examples:
+    - Linux, macOS, Solaris, Windows use LKMs
+    - Linux LKMs support device drivers and file systems
