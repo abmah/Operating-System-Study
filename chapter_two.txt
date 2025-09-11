@@ -748,3 +748,146 @@ System Boot
 - Most OS (Windows, Linux, macOS, iOS, Android) boot loaders:
   - Recovery mode / single-user mode
   - Fix hardware issues, repair FS, reinstall OS
+
+
+
+
+Operating-System Debugging
+--------------------------
+
+# Debugging Overview
+- Debugging = finding & fixing errors in hardware & software
+- Includes performance tuning (removing bottlenecks)
+- Covers process failures, kernel crashes, and performance monitoring
+
+# Failure Analysis
+- Process failure -> error info logged; core dump (process memory snapshot) saved
+- Debuggers probe running programs & core dumps
+- Kernel failure = crash
+  - Saves error info & memory state to crash dump
+  - Often writes memory to a reserved disk area (outside any file system); after reboot a process copies that area into a crash-dump file for analysis
+- User-level debugging vs. kernel debugging: different tools & techniques; kernel debugging is more complex
+
+# Performance Monitoring & Tuning
+- Goal = improve performance by finding & removing bottlenecks
+- Monitoring modes: per-process or system-wide
+- Two approaches: counters and tracing
+
+# Counters (examples)
+- Per-process: ps, top
+- System-wide: vmstat, netstat, iostat
+- Linux: /proc pseudo-filesystem holds kernel and per-process stats (/proc/<pid>)
+- Windows: Task Manager provides processes, CPU, memory, networking stats
+
+# Tracing (examples)
+- Per-process tracing: strace, gdb (source-level debugging)
+- System-wide tracing: perf, tcpdump
+- Tracing records events (e.g., system-call sequences) rather than sampling counters
+
+# Tools & Notes
+- Counter tools read current metric values; tracing tools record detailed event data
+- New kernel-enabled analysis tools (e.g., BCC) improve dynamic kernel tracing and observability
+
+# Kernighan's Law (quote & implication)
+- "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
+- Implication: favor clear/simple code — it's easier to understand, maintain, and debug
+
+
+
+# BCC (BPF Compiler Collection) 
+- Debugs user-level & kernel interactions with minimal impact
+- Front-end to eBPF (extended Berkeley Packet Filter)
+  - Programs written in subset of C → compiled to eBPF instructions → inserted into running Linux kernel
+  - Verifier ensures safe execution (performance & security)
+- BCC simplifies eBPF via Python tools embedding C code
+- Tools inserted via probes or tracepoints
+
+## Usage Examples
+- `disksnoop.py` → traces disk I/O
+TIME(s) T BYTES LAT(ms)
+1946.29186700 R 8 0.27
+1946.33965000 R 8 0.26
+1948.34585000 W 8192 0.96
+1950.43251000 R 4096 0.56
+1951.74121000 R 4096 0.35
+
+pgsql
+Copy code
+- Shows timestamp, Read/Write, bytes, latency in ms
+- `opensnoop -p 1225` → traces open() calls for process ID 1225
+
+# Key Points
+- Safe to use on live production systems
+- Useful for performance bottlenecks & security monitoring
+- Can trace MySQL, Java, Python, and process-specific activity
+- BCC is actively evolving with new features constantly added
+
+
+
+
+Summary
+-------
+
+- An operating system provides an environment for executing programs by offering services to users and programs.
+
+- Three primary approaches for interacting with an OS:
+  1. Command interpreters
+  2. Graphical user interfaces (GUI)
+  3. Touchscreen interfaces
+
+- System calls provide access to OS services; programmers use system call APIs.
+
+- System calls categories:
+  1. Process control
+  2. File management
+  3. Device management
+  4. Information maintenance
+  5. Communications
+  6. Protection
+
+- Standard C library provides system-call interface for UNIX/Linux.
+
+- OS includes system programs providing utilities to users.
+
+- Linker: combines multiple relocatable object modules → single executable.
+- Loader: loads executable into memory for CPU execution.
+
+- OS-specific applications arise from:
+  - Different binary formats
+  - Different CPU instruction sets
+  - Varying system calls
+
+- OS design goals determine policies, implemented via mechanisms.
+
+- Monolithic OS:
+  - Single, static binary
+  - Runs in single address space
+  - Efficient but hard to modify
+
+- Layered OS:
+  - Discrete layers (hardware → user interface)
+  - Easier structure, but performance may suffer
+
+- Microkernel OS:
+  - Minimal kernel
+  - Services as user-level applications
+  - Communication via message passing
+
+- Modular OS:
+  - Services provided through modules loaded/unloaded at runtime
+  - Many modern OS use hybrid of monolithic kernel + modules
+
+- Boot loader:
+  - Loads OS into memory
+  - Performs initialization
+  - Starts system execution
+
+- Performance monitoring:
+  - Counters → system-wide or per-process statistics
+  - Tracing → follows program execution through OS
+
+
+Practice Exercises
+------------------
+
+
