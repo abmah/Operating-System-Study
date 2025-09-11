@@ -561,9 +561,9 @@ Microkernels and Modules
     - Example: early Windows NT microkernel slower than Windows 95; later versions moved closer 
       to monolithic for performance
 
+
 Modules
 ------------------------
-
 
 - Modules (Loadable Kernel Modules - LKMs):
   * Kernel has core components; additional services linked via modules at boot or runtime
@@ -576,3 +576,175 @@ Modules
   * Examples:
     - Linux, macOS, Solaris, Windows use LKMs
     - Linux LKMs support device drivers and file systems
+
+
+Hybrid Systems (OS Structures)
+------------------------
+- Most modern OS = hybrid (monolithic + microkernel mix)
+- Goal: balance performance, security, usability
+- Linux: monolithic + modular (dynamic kernel modules)
+- Windows: monolithic but w/ microkernel traits (subsystems, loadable modules)
+
+# macOS vs iOS
+- macOS: desktop/laptop (Intel)
+- iOS: mobile (ARM), strict security, restricted APIs
+- Shared architecture:
+  1. User Experience Layer:
+     - macOS: Aqua UI (mouse/trackpad)
+     - iOS: Springboard UI (touch)
+  2. Application Frameworks:
+     - Cocoa (macOS), Cocoa Touch (iOS, mobile hardware support)
+  3. Core Frameworks:
+     - Graphics/media (QuickTime, OpenGL)
+  4. Kernel Environment = Darwin
+
+# Darwin Kernel (Hybrid)
+- Combines Mach microkernel + BSD UNIX kernel + I/O Kit + kexts
+- Two syscall interfaces:
+  - Mach traps (microkernel services)
+  - BSD syscalls (POSIX)
+- Mach provides: memory mgmt, CPU scheduling, IPC (msg passing, RPC)
+- BSD provides: POSIX (e.g., fork())
+- I/O Kit: device drivers + dynamic modules
+- Runs in one address space → avoids microkernel overhead
+- Darwin = open source, but Cocoa/frameworks = proprietary
+
+
+Android OS (Hybrid System)
+------------------------
+
+- Developed by Open Handset Alliance (Google-led)
+- Open source, runs on many mobile platforms (vs iOS closed + Apple-only)
+
+# Architecture (Layered stack)
+apps
+ └─ Android Runtime (ART VM)
+ └─ Frameworks + JNI
+ └─ Native Libraries (SQLite, SSL, WebKit, OpenGL, Media, etc.)
+ └─ Bionic libc
+ └─ HAL (Hardware Abstraction Layer)
+ └─ Linux Kernel (modified for mobile)
+
+# Key Components
+- Apps: written in Java using Android API (not standard Java API)
+- ART (Android Runtime):
+  - Java → bytecode (.class) → .dex
+  - Ahead-of-Time (AOT) compilation → native code at install
+  - Benefits: faster execution, lower power consumption (better for mobile)
+- JNI: lets Java access hardware directly (not portable across devices)
+- Native libraries: support browser (WebKit), DB (SQLite), networking (SSL), graphics (OpenGL), etc.
+- HAL: abstracts hardware (camera, GPS, sensors) → consistent interface across devices
+- Bionic libc: smaller + faster than GNU glibc, avoids GPL, optimized for low CPU/memory
+- Linux kernel: modified for mobile (power mgmt, memory, IPC → Binder)
+
+# KEY IDEA:
+Android = layered hybrid system built on Linux kernel, 
+uses ART VM for efficient Java execution, HAL for hardware portability, 
+and Bionic libc for lightweight performance on mobile.
+
+
+
+
+
+Windows Subsystem for Linux (WSL) - Hybrid Architecture
+------------------------
+
+- Windows uses hybrid design: user-mode subsystems + kernel
+- Subsystems emulate other OS environments (e.g., Linux)
+- WSL (Windows 10+): run native Linux ELF binaries on Windows
+
+# Typical Workflow
+1. User launches bash.exe → bash shell
+2. WSL creates a Linux instance:
+   - init process → starts /bin/bash
+3. Each process runs inside a Windows Pico process:
+   - Loads Linux binary into its address space
+   - Provides execution environment for Linux app
+
+# System Call Handling
+- Pico processes communicate with kernel services:
+  - **LXCore** and **LXSS**
+- Linux system calls:
+  - If exact Windows equivalent exists → LXSS forwards call
+  - If partial equivalent → LXSS performs partial work + calls Windows syscall
+  - If no equivalent → LXSS implements functionality in software
+- Example: Linux fork() → LXSS + Windows CreateProcess()
+
+
+Operating-System Generation & Booting
+-------------------------------------
+
+# OS Generation Overview
+- OS can target:
+  - Specific machine (embedded)
+  - Class of machines (desktop/laptop/mobile)
+- Most computers come with preinstalled OS (Windows/macOS)
+- Replacing/adding OS steps:
+  1. Write/obtain source code
+  2. Configure OS for hardware
+  3. Compile OS
+  4. Install OS
+  5. Boot system
+
+# Configuration Approaches
+1. Tailored Build:
+   - Modify source + full compile → highly specific OS
+2. Precompiled Modules:
+   - Select/link needed modules → faster, general OS
+3. Modular/Runtime Selection:
+   - Parameters set for execution-time selection → flexible
+
+# Differences:
+- Size & generality
+- Ease of hardware adaptation
+- Embedded → tailored build
+- Modern desktop/mobile → precompiled + loadable kernel modules
+
+
+
+
+System Boot
+-----------
+
+# Boot Overview
+- Booting = starting computer by loading kernel
+- Steps:
+  1. Bootstrap program / boot loader locates kernel
+  2. Kernel loaded into memory & started
+  3. Kernel initializes hardware
+  4. Root file system mounted
+
+# Boot Process
+- BIOS-based (multistage):
+  - BIOS runs initial boot loader from firmware
+  - Loads second boot loader from boot block
+  - Boot block loader loads OS or next stage
+- UEFI (modern PCs):
+  - Replaces BIOS
+  - Supports 64-bit systems & larger disks
+  - Single complete boot manager → faster boot
+
+# Bootstrap Tasks
+- Load kernel into memory
+- Run diagnostics (CPU, memory, devices)
+- Initialize CPU registers, device controllers, memory
+- Mount root file system → system runs
+
+# Linux Boot
+- GRUB = open-source boot loader
+  - Config file sets boot parameters (kernel image, root FS)
+  - Flexible: select kernels, modify kernel parameters at boot
+- Kernel image compressed → extracted after loading
+- initramfs (temporary RAM FS) contains drivers/modules
+  - After drivers loaded → switch to real root FS
+- Systemd process started → other services → login prompt
+
+# Mobile Boot (Android)
+- Uses LK (Little Kernel) boot loader (no GRUB)
+- Kernel image compressed, initramfs used as root FS
+- init process started → services launched → home screen displayed
+
+# Recovery / Diagnostic Modes
+- Most OS (Windows, Linux, macOS, iOS, Android) boot loaders:
+  - Recovery mode / single-user mode
+  - Fix hardware issues, repair FS, reinstall OS
