@@ -984,11 +984,26 @@ Chapter 2 Exercises
 divided into two main categories. Briefly describe the two categories,
 and discuss how they differ.
 
+User services : provide functions that make it easier for users
+and programs to run 
+
+system servies: manage and protect the system resources includeing cpu
+scheduling memory management etc
+
+difference is user services focus on convenient for user / programs
+system services focus on efficient operation of system
 
 
 2.10 Describe three general methods for passing parameters to the operating
 system.
 
+1 pass parameters in registers: parameters are placed directly into cpu registers
+
+2 pass parameters in a memory block: the address of the block is passed
+in a register the block contains all the parameters
+
+3 pass parameters in the stack: parameters are pushed onto the stack 
+by the program and hte os pops them off
 
 
 2.11 Describe how you could obtain a statistical profile of the amount of time
@@ -996,14 +1011,35 @@ a program spends executing different sections of its code. Discuss the
 importance of obtaining such a statistical profile.
 
 
+Use a profiler/tracer to measure execution time; it’s important for finding bottlenecks and improving performance.
+
+
 
 2.12 What are the advantages and disadvantages of using the same systemcall interface 
 for manipulating both files and devices?
 
 
+Advantages:
+
+Simplifies the interface – programs can use the same system calls for files and devices.
+
+Reduces redundancy – no need to implement separate calls for every device type.
+
+Portability – programs don’t need to know whether they’re accessing a file or a device.
+
+Disadvantages:
+
+Less efficient – some device operations may need special handling not well suited to the generic interface.
+
+Limited functionality – unique device features may be hard to expose through the file-like interface.
+
+
 
 2.13 Would it be possible for the user to develop a new command interpreter
 using the system-call interface provided by the operating system?
+
+very possible it would only need to call the system calls provided by the 
+operating system
 
 
 
@@ -1011,16 +1047,53 @@ using the system-call interface provided by the operating system?
 (JIT) compilation.
 
 
+Android uses Ahead-of-Time (AOT) compilation to convert apps into native
+machine code before they run. This improves startup time, runtime
+performance, and battery efficiency compared to Just-in-Time (JIT)
+compilation, which compiles code during execution.
+
 
 2.15 What are the two models of interprocess communication? What are the
 strengths and weaknesses of the two approaches?
 
 
+Message passing (communication via the network or OS messages):
+
+Strengths: Easy to implement, works across machines.
+
+Weaknesses: Slower due to copying and OS overhead.
+
+Shared memory:
+
+Strengths: Very fast, since processes access the same memory directly.
+
+Weaknesses: Requires careful setup and synchronization to prevent conflicts (e.g., race conditions).
+
+
 2.16 Contrast and compare an application programming interface (API) and
 an application binary interface (ABI).
 
+API (Application Programming Interface) is a set of high-level 
+functions or routines that programs use to request services from 
+the OS. APIs are usually written in high-level languages like C 
+or Java. Example: open(), read(), write().
+
+ABI (Application Binary Interface) defines how compiled programs 
+interact with the OS at the binary level. It includes calling 
+conventions, data types, register usage, and system call 
+instructions.
+
+Comparison:
+- API is source-level and human-readable; ABI is binary-level 
+  and machine-readable.
+- API lets you write code; ABI ensures compiled code communicates 
+  correctly with the OS.
+
 
 2.17 Why is the separation of mechanism and policy desirable?
+
+because policies change all the time while mechanisms change rarely so 
+to save headaches we seperate them so it flexible, easier to modify, and easier to maintain.
 
 
 2.18 It is sometimes difficult to achieve a layered approach if two components
@@ -1029,19 +1102,69 @@ in which it is unclear how to layer two system components that require
 tight coupling of their functionalities.
 
 
+In a layered operating system, each layer can only interact with the layer directly below it. This makes it hard when two components require tight coupling, because they may reside in different layers.
+
+Example scenario:
+
+Memory management and process scheduling often need to interact closely.
+
+The scheduler may need to know the memory status of processes to make decisions, while memory management may need to know which processes are active.
+
+Strict layering would force communication through intermediate layers, making it inefficient or complex.
+
+Summary: Tight coupling between components that span layers can make a strict layered design impractical.
+
 2.19 What is the main advantage of the microkernel approach to system
 design? How do user programs and system services interact in a microkernel architecture? 
 What are the disadvantages of using the microkernel approach?
 
 
+the main advantage of the microkernel system design is its simplicity 
+since only the core part of the kernal is included in the kernal
+which makes it modular, easier to maintain, and more reliable.
+
+the disadvantage are performance overhead because message 
+passing between user space services can be slower than monolithic approach
+
+Complexity in communication: Designing and debugging message-passing mechanisms can be tricky.
+
+Some operations may require more context switches, reducing efficiency.
+
+
 2.20 What are the advantages of using loadable kernel modules?
+
+Flexibility: Modules can be loaded and unloaded at runtime without rebooting the system.
+
+Performance: Only the needed modules are loaded, saving memory and reducing overhead.
+
+Ease of development: New functionality (like device drivers) can be added without recompiling or modifying the entire kernel.
+
+Modularity: Keeps the kernel smaller and more organized.
 
 
 2.21 How are iOS and Android similar? How are they different?
 
 
+Similarities:
+- Both are mobile operating systems for smartphones and tablets.
+- Both provide application frameworks for app development.
+- Both use sandboxing to isolate apps for security.
+- Both manage memory, processes, and power efficiently.
+- Both have GUI-based interfaces and app stores.
+
+Differences:
+- Kernel: iOS uses XNU hybrid kernel; Android uses Linux kernel.
+- Programming languages: iOS uses Swift/Objective-C; Android uses Java/Kotlin.
+sources.
+- Customization: Android is more open; iOS is more restricted.
+- Hardware support: iOS runs only on Apple devices; Android runs on many manufacturers.
+
+
+
 2.22 Explain why Java programs running on Android systems do not use the
 standard Java API and virtual machine.
+
+Android does not use the standard Java API or JVM because it uses its own runtime (Dalvik/ART) and Java-like API optimized for mobile devices, allowing ahead-of-time compilation and efficient performance on limited resources.
 
 
 2.23 The experimental Synthesis operating system has an assembler incorporated in the kernel. 
@@ -1050,3 +1173,22 @@ the path that the system call must take through the kernel. This approach is the
 the layered approach, in which the path through the kernel is extended
 to make building the operating system easier. Discuss the pros and cons
 of the Synthesis approach to kernel design and system-performance optimization.
+
+
+
+
+Pros:
+
+High performance: System calls are optimized by assembling routines in kernel space, minimizing the path and overhead.
+
+Faster execution: Reduces context switches and layer traversal, improving responsiveness for critical operations.
+
+Fine-grained control: Kernel has direct control over low-level routines and optimizations.
+
+Cons:
+
+Reduced modularity: Tightly coupling routines in the kernel makes it harder to maintain or extend.
+
+Difficult to debug and develop: Any changes in one part of the kernel may affect other tightly coupled routines.
+
+Less flexible: Adding new features or policies may require modifying kernel code, unlike layered designs.
