@@ -1192,3 +1192,28 @@ Reduced modularity: Tightly coupling routines in the kernel makes it harder to m
 Difficult to debug and develop: Any changes in one part of the kernel may affect other tightly coupled routines.
 
 Less flexible: Adding new features or policies may require modifying kernel code, unlike layered designs.
+
+
+
+
+
+
+Kernel Modules Overview
+-----------------------
+
+This section explains how to create and insert a simple Linux kernel module.
+- Use `lsmod` to list currently loaded kernel modules.
+- A basic kernel module (simple.c) is shown. It prints messages when loaded
+  (`simple_init`) and removed (`simple_exit`).
+- Entry point (`simple_init`) must return int (0 = success). Exit point
+  (`simple_exit`) returns void.
+- Macros `module_init()` and `module_exit()` register these functions.
+- Messages are logged with `printk()`, similar to `printf()` but for the kernel,
+  viewable with `dmesg`. Priority level used: `KERN_INFO`.
+- Metadata is added with `MODULE_LICENSE()`, `MODULE_DESCRIPTION()`, and
+  `MODULE_AUTHOR()`.
+- Compile with `make`, which produces `simple.ko` (the loadable module).
+
+
+
+
